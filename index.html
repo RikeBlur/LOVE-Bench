@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="dark"><meta name="theme-color" content="#08090a"><meta name="description" content="LOVE-Bench evaluates long-horizon object-level video editing. Explore the benchmark scores and compare an edit by LOVE-Stream with its source video."><title>LOVE-Bench · Long-Horizon Object-Level Video Editing</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23c4cbff'/%3E%3Cstop offset='50%25' stop-color='%237170ff'/%3E%3Cstop offset='100%25' stop-color='%234b54b8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z' fill='url(%23g)'/%3E%3C/svg%3E"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"><link rel="stylesheet" href="assets/template.css"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="benchmark.css"><script defer src="project.js"></script><script defer src="benchmark-data.js"></script><script defer src="benchmark.js"></script></head>
+<body>
+<header class="topbar"><div class="wrap navline"><a class="wordmark" href="#top">LOVE<span>-Bench</span></a><nav aria-label="Sections"><a href="#leaderboard">Leaderboard</a><a href="#benchmark">Benchmark</a><a href="#demo">LOVE-Stream</a></nav></div></header>
+<main id="top">
+<section class="hero publication-header"><div class="hero-body"><h1 class="publication-title"><span>LOVE-Bench</span><small>Benchmark and Streaming Model for<br class="wide"> Long-Horizon Object-Level Video Editing</small></h1><div class="publication-links"><button class="pending" type="button" disabled>Paper · Coming soon</button><button class="pending" type="button" disabled>Code · Coming soon</button><button class="pending" type="button" disabled>Dataset · Coming soon</button><a class="jump" href="#demo">Video comparison ↓</a></div></div></section>
+<section class="wrap board" id="leaderboard"><div class="boardhead"><div><h2>LOVE-Bench leaderboard</h2></div></div>
+<div class="scroll" tabindex="0" role="region" aria-label="Model scores"><table><thead id="score-head"></thead><tbody id="score-body"></tbody></table></div>
+<noscript>Enable JavaScript to view the leaderboard.</noscript></section>
+<section id="abstract" class="section narrow"><h2>Abstract</h2><p>Video editing is increasingly evolving toward longer durations and more precise object-level manipulation, yet existing benchmarks remain insufficient for evaluating these emerging capabilities. We introduce <strong>LOVE-Bench</strong>, comprising 650 source videos averaging 43 seconds, 1,020 editing instructions, and 220 reference images across four object-level editing tasks. Fine-grained spatial and temporal annotations enable comprehensive evaluation of long-horizon stability, source fidelity, instruction compliance, and video quality. We further introduce <strong>LOVE-Stream</strong>, a training-free streaming editing pipeline based on the Wan2.1 T2V model that employs halo-based source-context conditioning to mitigate temporal discontinuities across video chunks. Using LOVE-Bench, we benchmark existing video editing methods, demonstrating its ability to provide comprehensive evaluations that closely align with human judgments. Our results reveal that existing methods often struggle to maintain temporally consistent object-level edits over extended durations, while LOVE-Stream achieves improved temporal consistency and source fidelity.</p></section>
+<section class="hero is-light" id="benchmark"><div class="wrap section">
+  <p class="eyebrow benchmark-kicker">Built for the long run</p>
+  <h2>LOVE-Bench contributions</h2>
+  <p class="benchmark-intro">Long videos. Precise annotations. Evaluation that looks beyond a single clip.</p>
+  <div class="contributions">
+    <article class="contribution dataset-card">
+      <header class="contribution-heading"><span class="contribution-number">01 / DATASET</span><h3>Longer. Broader. Real.</h3><p>Real-world videos with diverse objects and four types of editing tasks.</p></header>
+      <div class="dataset-stats"><div><strong>650</strong><span>source videos</span></div><div><strong>1,020</strong><span>editing instructions</span></div><div><strong>43.06<span>s</span></strong><span>average duration</span></div><div><strong>220</strong><span>reference images</span></div></div>
+      <div class="chart-switch" role="group" aria-label="Dataset distribution"><button type="button" data-chart="durations" aria-pressed="true">Duration</button><button type="button" data-chart="tasks" aria-pressed="false">Tasks</button><button type="button" data-chart="categories" aria-pressed="false">Objects</button></div>
+      <div id="dataset-chart" class="dataset-chart" aria-live="polite"></div>
+      <div class="dataset-insight" id="dataset-insight"></div>
+    </article>
+    <article class="contribution annotation-card">
+      <header class="contribution-heading"><span class="contribution-number">02 / ANNOTATIONS</span><h3>Where. When. What.</h3><p>Pixel masks, object boxes and visibility labels, aligned frame by frame.</p></header>
+      <div class="annotation-stage" id="annotation-stage">
+        <video id="annotation-video" src="assets/videos/2075_292aac-overlay.mp4" poster="assets/videos/2075_292aac-overlay-poster.webp" muted playsinline preload="auto" aria-label="Black notebook with green object mask and yellow bounding box"></video>
+        <span class="annotation-badge">BLACK NOTEBOOK</span>
+      </div>
+      <div class="annotation-controls"><button id="annotation-play" type="button" disabled>Play</button><output id="annotation-time">0:00 / 0:39</output><span id="annotation-frame">Frame 0</span></div>
+      <label class="timeline-label" for="annotation-seek">Visibility timeline <span id="annotation-state">Fully visible</span></label>
+      <div class="annotation-track"><div id="visibility-segments" aria-hidden="true"></div><input type="range" id="annotation-seek" min="0" max="989" value="0" step="1" aria-label="Annotation frame" disabled></div>
+      <div class="timeline-ticks"><span>0 s</span><span>19.80 s</span><span>39.60 s</span></div>
+      <div class="annotation-legend"><span><i class="mask-key"></i>Object mask</span><span><i class="box-key"></i>Bounding box</span></div>
+      <div class="annotation-facts"><div><strong>990</strong><span>annotated frames</span></div><div><strong>25 fps</strong><span>synchronized playback</span></div></div>
+      <p class="annotation-note" id="annotation-status" role="status">Visible → not visible → visible again. The target is labeled not visible from 15.04 to 25.44 s.</p>
+    </article>
+    <article class="contribution stability-card">
+      <header class="contribution-heading"><span class="contribution-number">03 / EVALUATION</span><h3>Beyond short-term quality.</h3><p>Four complementary tests for edits that need to last.</p></header>
+      <div class="metric-schematics">
+        <div class="metric-row"><details class="metric-detail"><summary><span class="metric-code">CP</span><span>Compliance persistence</span><span class="metric-expand" aria-hidden="true">+</span></summary>
+          <div class="metric-explanation">Combines mean compliance, the weakest observations, and early-to-late decline.<code>CP = (c̄ · Lq(c) · [1 − max(0, c̄early − c̄late)])<sup>1/3</sup></code></div></details>
+          <svg viewBox="0 0 300 65" role="img" aria-label="Compliance over time: a stable edit stays high; a failing edit dips and declines."><path class="plot-axis" d="M12 10V49H288"/><path class="plot-good" d="M14 17L50 16 85 18 120 16 155 19 190 17 225 18 280 17"/><path class="plot-bad" d="M14 20L50 21 85 37 120 24 155 31 190 39 225 36 280 45"/><text x="14" y="62">Early</text><text x="256" y="62">Late</text><text x="169" y="11">Maintain the edit</text></svg>
+          <p>Does the requested edit persist over time?</p></div>
+        <div class="metric-row"><details class="metric-detail"><summary><span class="metric-code">BHC</span><span>Beyond-horizon consistency</span><span class="metric-expand" aria-hidden="true">+</span></summary>
+          <div class="metric-explanation">Compares consistency at temporal separations H and 4H; penalizes long-range drift.<code>BHC = √(Cfar · [1 − max(0, Cnear − Cfar)])</code></div></details>
+          <svg viewBox="0 0 300 65" role="img" aria-label="Compare nearby and distant observation windows at H and 4H to reveal gradual drift."><path class="plot-axis" d="M14 37H282"/><path class="plot-good" d="M22 33V23H80V33M22 21V9H270V33"/><g fill="#6c60ad"><rect x="16" y="31" width="12" height="12" rx="3"/><rect x="74" y="31" width="12" height="12" rx="3"/><rect x="264" y="31" width="12" height="12" rx="3"/></g><text x="45" y="20">H</text><text x="138" y="23">4H</text><text x="14" y="61">Reference</text><text x="211" y="61">Distant window</text></svg>
+          <p>Do distant observations still agree?</p></div>
+        <div class="metric-row"><details class="metric-detail"><summary><span class="metric-code">AOS</span><span>Abrupt object shift</span><span class="metric-expand" aria-hidden="true">+</span></summary>
+          <div class="metric-explanation">Penalizes large and frequent feature jumps between adjacent windows. Annotated cuts and occlusions are excluded.<code>AOS = √((1 − J95) · (1 − Rτ))</code></div></details>
+          <svg viewBox="0 0 300 65" role="img" aria-label="Adjacent-window feature jumps: a spike above the threshold marks an abrupt object shift."><path class="plot-axis" d="M12 8V49H288"/><path class="plot-threshold" d="M14 26H282"/><path class="plot-good" d="M14 44L45 42 76 44 107 41 138 43 169 41 200 44 231 42 280 43"/><path class="plot-bad" d="M14 44L75 41 105 44 132 10 157 44 210 43 235 21 258 43 280 44"/><text x="14" y="62">Adjacent windows</text><text x="240" y="20">τ</text></svg>
+          <p>Does the object suddenly shift or flicker?</p></div>
+        <div class="metric-row"><details class="metric-detail"><summary><span class="metric-code">PORR</span><span>Post-occlusion recovery</span><span class="metric-expand" aria-hidden="true">+</span></summary>
+          <div class="metric-explanation">For eligible reappearance events, measures post-event quality, recovery relative to pre-event quality, and time to sustained recovery.<code>PORRquality = (Qpost · min(1, Qpost / Qpre) · Trec)<sup>1/3</sup></code></div></details>
+          <svg viewBox="0 0 300 65" role="img" aria-label="Recovery after occlusion: a robust edit recovers promptly, while a failing edit recovers slowly and incompletely."><rect x="95" y="3" width="66" height="46" rx="3" fill="#eeedf3"/><path class="plot-axis" d="M12 10V49H288"/><path class="plot-good" d="M14 18L54 17 91 18M164 23L194 18 230 18 280 17"/><path class="plot-bad" d="M14 20L54 19 91 20M164 45L194 42 230 37 280 32"/><text x="14" y="62">Before</text><text x="99" y="62">Occluded</text><text x="228" y="62">Reappears</text></svg>
+          <p>Does the edit return when the object does?</p></div>
+      </div>
+      <footer class="contribution-foot metric-foot"><span><i class="line-key good"></i>Stable <i class="line-key bad"></i>Failure</span><span>Conceptual diagrams · not measured scores</span></footer>
+    </article>
+  </div>
+</div></section>
+<section id="demo" class="section demo"><h2>LOVE-Stream</h2><p class="intro">A training-free streaming editor based on the Wan2.1 T2V model, using neighboring source frames to keep object edits consistent across video chunks.</p>
+<div class="demo-grid">
+<figure class="demo-example" data-example="3287_fa5c91">
+  <figcaption><span class="eyebrow">Editing task</span><h3>black notebook <span>→</span> blue notebook</h3></figcaption>
+  <div class="compare" style="aspect-ratio: 832/480">
+    <video class="comparison-edited" playsinline muted preload="metadata" aria-label="LOVE-Stream result: blue notebook" poster="assets/videos/3287_fa5c91-edited-poster.webp" src="assets/videos/3287_fa5c91-edited.mp4"></video>
+    <video class="comparison-source" playsinline muted preload="metadata" aria-label="Source: black notebook" poster="assets/videos/3287_fa5c91-source-poster.webp" src="assets/videos/3287_fa5c91-source.mp4"></video>
+    <span class="tag left">Source</span><span class="tag right">LOVE-Stream</span>
+    <span class="divider" aria-hidden="true"><i>‹ ›</i></span>
+    <input class="comparison-wipe" type="range" min="0" max="100" value="50" aria-label="Source reveal for black notebook to blue notebook">
+  </div>
+  <div class="transport"><button class="comparison-play" type="button" disabled>Play</button><input class="comparison-timeline" aria-label="Playback position for black notebook to blue notebook" type="range" value="0" min="0" step="0.01" disabled><output class="comparison-clock">0:00</output></div>
+  <p class="hint comparison-status" role="status">Drag the divider to compare the same moment.</p>
+</figure>
+<figure class="demo-example" data-example="3429_594632">
+  <figcaption><span class="eyebrow">Editing task</span><h3>black pen <span>→</span> red pen</h3></figcaption>
+  <div class="compare" style="aspect-ratio: 848/464">
+    <video class="comparison-edited" playsinline muted preload="metadata" aria-label="LOVE-Stream result: red pen" poster="assets/videos/3429_594632-edited-poster.webp" src="assets/videos/3429_594632-edited.mp4"></video>
+    <video class="comparison-source" playsinline muted preload="metadata" aria-label="Source: black pen" poster="assets/videos/3429_594632-source-poster.webp" src="assets/videos/3429_594632-source-web.mp4"></video>
+    <span class="tag left">Source</span><span class="tag right">LOVE-Stream</span>
+    <span class="divider" aria-hidden="true"><i>‹ ›</i></span>
+    <input class="comparison-wipe" type="range" min="0" max="100" value="50" aria-label="Source reveal for black pen to red pen">
+  </div>
+  <div class="transport"><button class="comparison-play" type="button" disabled>Play</button><input class="comparison-timeline" aria-label="Playback position for black pen to red pen" type="range" value="0" min="0" step="0.01" disabled><output class="comparison-clock">0:00</output></div>
+  <p class="hint comparison-status" role="status">Drag the divider to compare the same moment.</p>
+</figure>
+<figure class="demo-example" data-example="4608_a4fa1b">
+  <figcaption><span class="eyebrow">Editing task</span><h3>yellow banana <span>→</span> green banana</h3></figcaption>
+  <div class="compare" style="aspect-ratio: 848/464">
+    <video class="comparison-edited" playsinline muted preload="metadata" aria-label="LOVE-Stream result: green banana" poster="assets/videos/4608_a4fa1b-edited-poster.webp" src="assets/videos/4608_a4fa1b-edit.mp4"></video>
+    <video class="comparison-source" playsinline muted preload="metadata" aria-label="Source: yellow banana" poster="assets/videos/4608_a4fa1b-source-poster.webp" src="assets/videos/4608_a4fa1b-source-web.mp4"></video>
+    <span class="tag left">Source</span><span class="tag right">LOVE-Stream</span>
+    <span class="divider" aria-hidden="true"><i>‹ ›</i></span>
+    <input class="comparison-wipe" type="range" min="0" max="100" value="50" aria-label="Source reveal for yellow banana to green banana">
+  </div>
+  <div class="transport"><button class="comparison-play" type="button" disabled>Play</button><input class="comparison-timeline" aria-label="Playback position for yellow banana to green banana" type="range" value="0" min="0" step="0.01" disabled><output class="comparison-clock">0:00</output></div>
+  <p class="hint comparison-status" role="status">Drag the divider to compare the same moment.</p>
+</figure>
+<figure class="demo-example" data-example="0404_49e446">
+  <figcaption><span class="eyebrow">Editing task</span><h3>Green little bird <span>→</span> Blue little bird</h3></figcaption>
+  <div class="compare" style="aspect-ratio: 832/480">
+    <video class="comparison-edited" playsinline muted preload="metadata" aria-label="LOVE-Stream result: Blue little bird" poster="assets/videos/0404_49e446-edited-poster.webp" src="assets/videos/0404_49e446-edit.mp4"></video>
+    <video class="comparison-source" playsinline muted preload="metadata" aria-label="Source: Green little bird" poster="assets/videos/0404_49e446-source-poster.webp" src="assets/videos/0404_49e446-source-web.mp4"></video>
+    <span class="tag left">Source</span><span class="tag right">LOVE-Stream</span>
+    <span class="divider" aria-hidden="true"><i>‹ ›</i></span>
+    <input class="comparison-wipe" type="range" min="0" max="100" value="50" aria-label="Source reveal for Green little bird to Blue little bird">
+  </div>
+  <div class="transport"><button class="comparison-play" type="button" disabled>Play</button><input class="comparison-timeline" aria-label="Playback position for Green little bird to Blue little bird" type="range" value="0" min="0" step="0.01" disabled><output class="comparison-clock">0:00</output></div>
+  <p class="hint comparison-status" role="status">Drag the divider to compare the same moment.</p>
+</figure>
+</div>
+</section>
+</main><footer class="footer">Page adapted from the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template">Academic Project Page Template</a> by Eliahu Horwitz, based on <a href="https://nerfies.github.io/">Nerfies</a>. Page design licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</footer></body></html>

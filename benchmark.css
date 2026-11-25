@@ -1,0 +1,804 @@
+/* Linear-inspired dark bento explorers for LOVE-Bench dataset, annotations, and evaluation metrics. */
+
+#benchmark {
+  position: relative;
+  background: linear-gradient(180deg, #0b0c0f 0%, #08090a 100%) !important;
+  border-top: 1px solid var(--line-subtle) !important;
+  border-bottom: 1px solid var(--line-subtle) !important;
+  overflow: hidden;
+}
+
+#benchmark::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(820px, 90%);
+  height: 260px;
+  background: radial-gradient(ellipse 65% 65% at 50% 0%, rgba(94, 106, 210, 0.13), transparent 72%);
+  pointer-events: none;
+}
+
+#benchmark .wrap {
+  position: relative;
+  z-index: 1;
+}
+
+.benchmark-kicker, .benchmark-intro {
+  text-align: center;
+}
+
+.benchmark-kicker {
+  display: table;
+  margin: 0 auto 14px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(94, 106, 210, 0.11);
+  border: 1px solid rgba(139, 149, 255, 0.24);
+  color: var(--accent-bright);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+}
+
+#benchmark h2 {
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.benchmark-intro {
+  color: var(--muted);
+  margin: 0 auto 40px;
+  max-width: 560px;
+  font-size: 15.5px;
+  line-height: 1.6;
+}
+
+/* 3-Column Bento Grid */
+.contributions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.contribution {
+  --mx: 50%;
+  --my: 0%;
+  position: relative;
+  padding: 24px 22px 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.036) 0%, rgba(255, 255, 255, 0.012) 100%);
+  border: 1px solid var(--line);
+  box-shadow: var(--specular), 0 18px 42px rgba(0, 0, 0, 0.42);
+  transition: border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.contribution::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(320px circle at var(--mx) var(--my), rgba(139, 149, 255, 0.095), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.annotation-card::before {
+  background: radial-gradient(320px circle at var(--mx) var(--my), rgba(79, 209, 181, 0.085), transparent 65%);
+}
+
+.stability-card::before {
+  background: radial-gradient(320px circle at var(--mx) var(--my), rgba(229, 169, 82, 0.085), transparent 65%);
+}
+
+.contribution:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--specular), 0 24px 52px rgba(0, 0, 0, 0.54);
+}
+
+.contribution:hover::before {
+  opacity: 1;
+}
+
+.contribution > * {
+  position: relative;
+  z-index: 1;
+}
+
+.contribution-heading {
+  min-height: 138px;
+}
+
+.contribution-number {
+  font-family: var(--font-mono);
+  color: var(--accent-bright);
+  font-size: 10.5px;
+  letter-spacing: 0.13em;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.annotation-card .contribution-number {
+  color: var(--emerald);
+}
+
+.stability-card .contribution-number {
+  color: var(--amber);
+}
+
+.contribution h3 {
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.032em;
+  color: var(--ink);
+}
+
+.contribution-heading p {
+  margin: 10px 0 20px;
+  font-size: 13px;
+  line-height: 1.62;
+  color: var(--muted);
+}
+
+/* ---------- Card 01: Dataset Explorer ---------- */
+.dataset-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 12px;
+  padding: 6px 0 22px;
+  border-top: 1px solid var(--line-subtle);
+  padding-top: 18px;
+}
+
+.dataset-stats strong {
+  display: block;
+  font-size: 30px;
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.dataset-stats strong span {
+  font-size: 16px;
+  margin-left: 2px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.dataset-stats div > span {
+  display: block;
+  color: var(--ink-subtle);
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.chart-switch {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  background: rgba(0, 0, 0, 0.36);
+  border: 1px solid var(--line-subtle);
+  border-radius: 8px;
+}
+
+.chart-switch button {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  flex: 1;
+  font-weight: 500;
+  transition: color 0.16s ease, background-color 0.16s ease, border-color 0.16s ease;
+}
+
+.chart-switch button:hover:not([aria-pressed="true"]) {
+  color: var(--ink-secondary);
+}
+
+.chart-switch button[aria-pressed="true"] {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.085);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.contribution button:focus-visible,
+.contribution summary:focus-visible,
+.contribution input:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 2px;
+}
+
+.dataset-chart {
+  min-height: 224px;
+  padding: 18px 0 12px;
+}
+
+.chart-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-subtle);
+  margin: 0 0 14px;
+  letter-spacing: 0.02em;
+}
+
+.bar-row {
+  margin-bottom: 12px;
+}
+
+.bar-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--ink-secondary);
+  margin-bottom: 5px;
+}
+
+.bar-caption b {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 11px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.bar-track {
+  background: rgba(255, 255, 255, 0.055);
+  height: 6px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5e6ad2 0%, #8b95ff 100%);
+  border-radius: 999px;
+  box-shadow: 0 0 10px rgba(94, 106, 210, 0.45);
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bar-row:nth-child(3n) .bar-fill {
+  background: linear-gradient(90deg, #4b55b0 0%, #7882e8 100%);
+}
+
+.category-bars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 14px;
+}
+
+.category-bars .bar-caption {
+  font-size: 10.5px;
+}
+
+.dataset-insight {
+  font-size: 12px;
+  line-height: 1.65;
+  background: rgba(94, 106, 210, 0.085);
+  border: 1px solid rgba(139, 149, 255, 0.18);
+  padding: 12px 13px;
+  border-radius: 10px;
+  margin-top: auto;
+  margin-bottom: 22px;
+  color: #aeb5cb;
+}
+
+.dataset-insight strong {
+  color: #e4e7ff;
+  font-weight: 600;
+}
+
+/* ---------- Card 02: Annotations Explorer ---------- */
+.annotation-stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #050608;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.annotation-stage > video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.annotation-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  background: rgba(8, 12, 14, 0.76);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(79, 209, 181, 0.32);
+  color: #d6fff4;
+  padding: 4px 8px;
+  border-radius: 5px;
+}
+
+.annotation-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 13px 0 22px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.annotation-controls button {
+  font-family: var(--font-sans);
+  border: 1px solid rgba(79, 209, 181, 0.34);
+  padding: 6px 12px;
+  background: rgba(79, 209, 181, 0.14);
+  color: #a9f5e3;
+  border-radius: 6px;
+  min-width: 54px;
+  font-size: 11.5px;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.annotation-controls button:hover:not(:disabled) {
+  background: var(--emerald);
+  color: #061310;
+  border-color: var(--emerald);
+}
+
+.annotation-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+#annotation-frame {
+  margin-left: auto;
+  color: var(--ink-subtle);
+}
+
+.timeline-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--ink-secondary);
+  gap: 8px;
+}
+
+#annotation-state {
+  font-family: var(--font-mono);
+  color: var(--emerald);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+#annotation-state[data-visibility="invisible"] {
+  color: var(--muted);
+}
+
+#annotation-state[data-visibility="partial"] {
+  color: var(--amber);
+}
+
+.annotation-track {
+  height: 26px;
+  position: relative;
+  margin-top: 9px;
+}
+
+#visibility-segments {
+  position: absolute;
+  inset: 6px 0;
+  display: flex;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.visibility-segment {
+  height: 100%;
+  background: rgba(79, 209, 181, 0.72);
+  border-right: 1px solid #0e1014;
+}
+
+.visibility-segment:last-child {
+  border-right: 0;
+}
+
+.visibility-segment[data-label="partial"] {
+  background: rgba(229, 169, 82, 0.75);
+}
+
+.visibility-segment[data-label="invisible"] {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+#annotation-seek {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  width: 100%;
+  position: absolute;
+  inset: 0;
+  height: 26px;
+  margin: 0;
+  cursor: ew-resize;
+}
+
+#annotation-seek::-webkit-slider-runnable-track {
+  height: 14px;
+  background: transparent;
+}
+
+#annotation-seek::-webkit-slider-thumb {
+  appearance: none;
+  height: 24px;
+  width: 4px;
+  border: 0;
+  border-radius: 2px;
+  background: #ffffff;
+  margin-top: -5px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.65), 0 0 10px rgba(255, 255, 255, 0.65);
+}
+
+#annotation-seek::-moz-range-track {
+  background: transparent;
+}
+
+#annotation-seek::-moz-range-thumb {
+  height: 24px;
+  width: 4px;
+  border: 0;
+  border-radius: 2px;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.65), 0 0 10px rgba(255, 255, 255, 0.65);
+}
+
+.timeline-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--ink-subtle);
+  margin-top: 4px;
+}
+
+.annotation-legend {
+  display: flex;
+  gap: 16px;
+  margin: 18px 0 22px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.annotation-legend i {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.mask-key {
+  background: var(--emerald);
+  border-radius: 2px;
+}
+
+.box-key {
+  border: 1.5px solid #f0b948;
+  border-radius: 1px;
+}
+
+.annotation-facts {
+  display: flex;
+  gap: 28px;
+  border-top: 1px solid var(--line-subtle);
+  padding-top: 16px;
+  margin-top: auto;
+}
+
+.annotation-facts strong {
+  display: block;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.annotation-facts span {
+  font-size: 10.5px;
+  color: var(--ink-subtle);
+}
+
+.annotation-note {
+  font-size: 11.5px !important;
+  line-height: 1.68;
+  color: var(--muted) !important;
+  margin: 12px 0 22px;
+}
+
+/* ---------- Card 03: Evaluation Metrics ---------- */
+.metric-schematics {
+  border-top: 1px solid var(--line-subtle);
+  padding-top: 14px;
+}
+
+.metric-row {
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--line-subtle);
+}
+
+.metric-row:last-child {
+  border: 0;
+  margin-bottom: 4px;
+}
+
+.metric-detail {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  display: block;
+}
+
+.metric-detail summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  padding: 2px 0;
+  transition: color 0.15s ease;
+}
+
+.metric-detail summary:hover {
+  color: #ffffff;
+}
+
+.metric-detail summary::-webkit-details-marker {
+  display: none;
+}
+
+.metric-code {
+  font-family: var(--font-mono);
+  color: #f0be74;
+  background: var(--amber-soft);
+  border: 1px solid rgba(229, 169, 82, 0.24);
+  font-size: 10px;
+  font-weight: 500;
+  border-radius: 5px;
+  padding: 3px 6px;
+  min-width: 40px;
+  text-align: center;
+}
+
+.metric-expand {
+  margin-left: auto;
+  color: var(--ink-subtle);
+  font-size: 16px;
+  line-height: 1;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), color 0.15s ease;
+}
+
+.metric-detail summary:hover .metric-expand {
+  color: var(--ink);
+}
+
+.metric-detail[open] .metric-expand {
+  transform: rotate(45deg);
+  color: var(--amber);
+}
+
+.metric-explanation {
+  background: rgba(0, 0, 0, 0.36);
+  border: 1px solid var(--line-subtle);
+  font-size: 11.5px;
+  padding: 10px 12px;
+  margin-top: 8px;
+  line-height: 1.65;
+  color: var(--ink-secondary);
+  border-radius: 8px;
+}
+
+.metric-explanation code {
+  display: block;
+  margin-top: 8px;
+  font: 10.5px/1.75 var(--font-mono) !important;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  background: transparent !important;
+  color: #f0be74 !important;
+  padding: 0;
+}
+
+/* Dark-mode SVG schematic styling (including inline fill overrides) */
+.metric-row > svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-top: 7px;
+}
+
+.metric-row > svg text {
+  font: 9px var(--font-sans);
+  fill: #7d8390;
+}
+
+.metric-row > svg g[fill="#6c60ad"] {
+  fill: var(--accent-bright);
+}
+
+.metric-row > svg rect[fill="#eeedf3"] {
+  fill: rgba(255, 255, 255, 0.065);
+}
+
+.plot-axis {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 1;
+}
+
+.plot-good {
+  fill: none;
+  stroke: var(--accent-bright);
+  stroke-width: 2.25;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.plot-bad {
+  fill: none;
+  stroke: #e29d52;
+  stroke-width: 1.85;
+  stroke-dasharray: 4 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.plot-threshold {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.24);
+  stroke-dasharray: 2 3;
+}
+
+.metric-row > p {
+  font-size: 11px;
+  color: var(--ink-subtle);
+  margin: 4px 0 0;
+}
+
+.contribution-foot {
+  margin-top: auto;
+  border-top: 1px solid var(--line-subtle);
+  padding: 14px 0 16px;
+  font-size: 10.5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+  color: var(--ink-subtle);
+}
+
+.contribution-foot a {
+  text-decoration: none;
+}
+
+.contribution-foot a:hover {
+  text-decoration: underline;
+}
+
+.metric-foot {
+  gap: 6px;
+  color: var(--ink-subtle);
+  font-size: 10px;
+}
+
+.metric-foot > span {
+  display: block;
+}
+
+.line-key {
+  display: inline-block;
+  width: 13px;
+  border-top: 2px solid var(--accent-bright);
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.line-key.bad {
+  border-top: 2px dashed #e29d52;
+  margin-left: 10px;
+}
+
+/* ---------- Responsive ---------- */
+@media (min-width: 801px) and (max-width: 1060px) {
+  .contributions {
+    gap: 12px;
+  }
+  .contribution {
+    padding: 20px 16px 0;
+  }
+  .contribution h3 {
+    font-size: 19px;
+  }
+  .metric-detail summary {
+    font-size: 11px;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 800px) {
+  .contributions {
+    grid-template-columns: 1fr;
+    max-width: 580px;
+    margin-inline: auto;
+    gap: 20px;
+  }
+  .contribution {
+    padding: 24px 22px 0;
+  }
+  .contribution-heading {
+    min-height: auto;
+  }
+  .dataset-stats {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .dataset-stats strong {
+    font-size: 26px;
+  }
+  .dataset-chart {
+    min-height: 0;
+  }
+  .metric-detail summary {
+    font-size: 13px;
+  }
+  .annotation-note {
+    margin-bottom: 22px;
+  }
+  .annotation-stage {
+    max-height: none;
+  }
+  .metric-row > svg {
+    max-height: 90px;
+  }
+  .metric-row > p {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .dataset-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  .contribution {
+    padding-inline: 18px;
+  }
+  .benchmark-intro {
+    padding-inline: 12px;
+  }
+}
